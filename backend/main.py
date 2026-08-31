@@ -1,9 +1,13 @@
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 import firebase_admin
 from firebase_admin import credentials, firestore
+
+import os
+import json
 
 from parser import parse_user_prompt
 
@@ -14,8 +18,17 @@ from parser import parse_user_prompt
 
 if not firebase_admin._apps:
 
+    firebase_credentials = os.environ.get(
+        "FIREBASE_CREDENTIALS"
+    )
+
+    if not firebase_credentials:
+        raise RuntimeError(
+            "FIREBASE_CREDENTIALS environment variable is not set"
+        )
+
     cred = credentials.Certificate(
-        r"C:\sihproject\silentpearlsprotoai-firebase-key.json"
+        json.loads(firebase_credentials)
     )
 
     firebase_admin.initialize_app(cred)
@@ -1086,3 +1099,4 @@ def recommend_from_prompt(
         "recommendations":
             recommendations
     }
+
