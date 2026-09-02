@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -7,7 +9,7 @@ html {
 }
 
 :root {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Open Sans", Arial, sans-serif;
   color: #182018;
   background: #f8faf7;
   font-synthesis: none;
@@ -30,7 +32,7 @@ body.dark-mode {
 button,
 input,
 select {
-  font: inherit;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 button {
@@ -52,6 +54,19 @@ a {
 .app.dark {
   background: #101510;
   color: #edf3ec;
+}
+
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+h1,
+h2,
+h3,
+.logo {
+  font-family: "Idealist Sans Light", "Open Sans", Arial, sans-serif;
+  font-weight: 300;
 }
 
 
@@ -84,7 +99,6 @@ a {
 
 .logo {
   font-size: 1.35rem;
-  font-weight: 700;
   letter-spacing: -0.02em;
   margin-right: auto;
 }
@@ -102,8 +116,9 @@ nav {
 
 nav a {
   color: #657064;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 nav a:hover,
@@ -126,8 +141,9 @@ nav a.active {
   color: #263026;
   border-radius: 999px;
   padding: 9px 14px;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .dark .theme-button {
@@ -155,9 +171,10 @@ nav a.active {
 }
 
 .eyebrow {
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.72rem;
   letter-spacing: 0.12em;
-  font-weight: 700;
+  font-weight: 600;
   color: #697569;
   margin-bottom: 18px;
 }
@@ -171,7 +188,7 @@ nav a.active {
   font-size: clamp(2.7rem, 6vw, 5.25rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
-  font-weight: 700;
+  font-weight: 300;
 }
 
 .hero-description {
@@ -180,6 +197,7 @@ nav a.active {
   line-height: 1.7;
   font-size: 1.02rem;
   margin: 25px 0;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 .dark .hero-description {
@@ -219,6 +237,7 @@ nav a.active {
   width: 100%;
   background: transparent;
   color: inherit;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 .search-box input::placeholder {
@@ -232,7 +251,8 @@ nav a.active {
   padding: 0 23px;
   background: #182018;
   color: #fff;
-  font-weight: 700;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-weight: 600;
 }
 
 .search-button {
@@ -256,6 +276,7 @@ nav a.active {
   color: #778076;
   font-size: 0.84rem;
   line-height: 1.9;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 .try-text button {
@@ -430,6 +451,7 @@ nav a.active {
   border-radius: 10px;
   background: #fff4f4;
   color: #9a3d3d;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 .dark .error-message {
@@ -479,13 +501,16 @@ nav a.active {
 
 .manual-toggle small {
   color: #798477;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.63rem;
   letter-spacing: 0.1em;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .manual-toggle strong {
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .toggle-arrow {
@@ -518,11 +543,13 @@ nav a.active {
   margin: 0 0 5px;
   font-size: 1.35rem;
   letter-spacing: -0.025em;
+  font-weight: 300;
 }
 
 .manual-heading p {
   margin: 0;
   color: #737d72;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.87rem;
 }
 
@@ -538,6 +565,7 @@ nav a.active {
   background: #fafcf9;
   color: inherit;
   outline: 0;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 .dark .state-select {
@@ -560,8 +588,9 @@ nav a.active {
   justify-content: space-between;
   gap: 15px;
   margin-bottom: 10px;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.91rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .slider-header strong {
@@ -618,6 +647,7 @@ nav a.active {
   display: flex;
   justify-content: space-between;
   color: #8a9388;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.72rem;
   margin-top: 7px;
 }
@@ -638,6 +668,7 @@ nav a.active {
 
 .budget-preview {
   color: #707a6f;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.85rem;
 }
 
@@ -651,7 +682,8 @@ nav a.active {
   color: inherit;
   border-radius: 10px;
   padding: 10px 14px;
-  font-weight: 700;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-weight: 600;
   margin-right: 8px;
 }
 
@@ -673,6 +705,7 @@ nav a.active {
   margin: 0 0 25px;
   font-size: 2rem;
   letter-spacing: -0.035em;
+  font-weight: 300;
 }
 
 .cards {
@@ -716,8 +749,9 @@ nav a.active {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.93);
   color: #182018;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .dark .score {
@@ -733,10 +767,12 @@ nav a.active {
   margin: 0 0 7px;
   font-size: 1.3rem;
   letter-spacing: -0.02em;
+  font-weight: 300;
 }
 
 .state {
   color: #747e73;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.82rem;
   margin-bottom: 13px;
 }
@@ -753,6 +789,7 @@ nav a.active {
   min-height: 52px;
   margin: 0 0 17px;
   color: #687268;
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.55;
   font-size: 0.87rem;
 }
@@ -774,8 +811,9 @@ nav a.active {
   color: #4f5b4e;
   border-radius: 999px;
   padding: 7px 10px;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .dark .card-details span {
@@ -791,7 +829,8 @@ nav a.active {
   background: transparent;
   color: inherit;
   border-radius: 10px;
-  font-weight: 700;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-weight: 600;
 }
 
 .map-button:hover,
@@ -809,6 +848,7 @@ nav a.active {
   padding: 45px 15px;
   text-align: center;
   color: #778176;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 .dark .loading,
@@ -822,7 +862,8 @@ nav a.active {
   gap: 8px;
   margin-top: 30px;
   color: #5d695b;
-  font-weight: 700;
+  font-family: "Open Sans", Arial, sans-serif;
+  font-weight: 600;
   font-size: 0.88rem;
 }
 
@@ -854,11 +895,13 @@ nav a.active {
   margin: 0 0 15px;
   font-size: 2.2rem;
   letter-spacing: -0.035em;
+  font-weight: 300;
 }
 
 .about p {
   margin: 0;
   color: #697368;
+  font-family: "Open Sans", Arial, sans-serif;
   line-height: 1.75;
 }
 
@@ -889,6 +932,7 @@ footer {
   justify-content: space-between;
   align-items: center;
   color: #778176;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 0.8rem;
 }
 
