@@ -1,785 +1,351 @@
 import { useState } from "react";
 import "./App.css";
 
-
-// ============================================================
-// BACKEND URL
-// ============================================================
-
 const API_URL = "https://desitrails-ai.onrender.com";
 
-
-// ============================================================
-// DEFAULT DESTINATIONS
-// ============================================================
+const fallbackImage =
+  "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80";
 
 const defaultPlaces = [
   {
-    name: "Tirthan Valley",
-    state: "Himachal Pradesh",
+    name: "Bakkhali Beach",
+    state: "West Bengal",
     description:
-      "A quiet valley with scenic trails, waterfalls and peaceful villages.",
-    image:
-      "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80"
+      "Peaceful, quiet, natural and less crowded coastal environment.",
+    image: fallbackImage,
   },
-
   {
-    name: "Bhandardara",
-    state: "Maharashtra",
+    name: "Jhargram",
+    state: "West Bengal",
     description:
-      "Lakes, dams and mountains. Perfect for a calm weekend.",
-    image:
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=80"
+      "Forested, peaceful, rural and naturally beautiful.",
+    image: fallbackImage,
   },
-
   {
-    name: "Kudle Beach",
-    state: "Karnataka",
+    name: "Bangus Valley",
+    state: "Jammu and Kashmir",
     description:
-      "A clean and less crowded beach near Gokarna.",
-    image:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+      "A pristine alpine valley with meadows, forests and mountain ranges.",
+    image: fallbackImage,
   },
-
-  {
-    name: "Ziro Valley",
-    state: "Arunachal Pradesh",
-    description:
-      "Beautiful valley, rice fields and rich local culture.",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
-  }
 ];
 
-
-// ============================================================
-// IMAGE FALLBACK
-// ============================================================
-
-const fallbackImage =
-  "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80";
-
-
-// ============================================================
-// APP
-// ============================================================
-
 function App() {
-
   const [prompt, setPrompt] = useState("");
-
-  const [places, setPlaces] =
-    useState(defaultPlaces);
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState("");
-
-  const [searched, setSearched] =
-    useState(false);
-
-
-  // ==========================================================
-  // SEARCH
-  // ==========================================================
+  const [places, setPlaces] = useState(defaultPlaces);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [searched, setSearched] = useState(false);
 
   const searchPlaces = async () => {
-
     if (!prompt.trim()) {
-
-      setError(
-        "Please enter a travel preference."
-      );
-
+      setError("Please enter a travel preference.");
       return;
     }
-
 
     setLoading(true);
     setError("");
     setSearched(true);
 
-
     try {
-
-      const response = await fetch(
-        `${API_URL}/recommend-from-prompt`,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-
-          body: JSON.stringify({
-            prompt: prompt
-          })
-        }
-      );
-
+      const response = await fetch(`${API_URL}/recommend-from-prompt`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: prompt.trim() }),
+      });
 
       if (!response.ok) {
-
-        throw new Error(
-          "Backend request failed."
-        );
+        throw new Error("Backend request failed.");
       }
 
-
-      const data =
-        await response.json();
-
-
-      // ======================================================
-      // BACKEND ERROR
-      // ======================================================
+      const data = await response.json();
 
       if (!data.success) {
-
         setPlaces([]);
-
-        setError(
-          data.message ||
-          "No recommendations found."
-        );
-
+        setError(data.message || "No recommendations found.");
         return;
       }
 
+      const recommendations = data.recommendations || [];
 
-      // ======================================================
-      // RECOMMENDATIONS
-      // ======================================================
-
-      const recommendations =
-        data.recommendations || [];
-
-
-      if (
-        recommendations.length === 0
-      ) {
-
+      if (recommendations.length === 0) {
         setPlaces([]);
-
-        setError(
-          "No matching destinations found."
-        );
-
+        setError("No matching destinations found.");
         return;
       }
 
-
-      // ======================================================
-      // PREPARE CARDS
-      // ======================================================
-
-      const formatted =
-        recommendations.map(
-          (place) => ({
-
-            name:
-              place.name ||
-              "Unknown Place",
-
-            state:
-              place.state ||
-              "India",
-
-            description:
-              place.description ||
-              "A beautiful lesser-known destination waiting to be explored.",
-
-            image:
-              place.image ||
-              fallbackImage,
-
-            score:
-              place.match_score,
-
-            latitude:
-              place.latitude,
-
-            longitude:
-              place.longitude,
-
-            budget:
-              place.budget,
-
-            nature:
-              place.nature_score,
-
-            adventure:
-              place.adventure_score,
-
-            culture:
-              place.culture_score,
-
-            crowd:
-              place.crowd_score,
-
-            accessibility:
-              place.accessibility_score,
-
-            season:
-              place.best_season
-          })
-        );
-
-
-      setPlaces(formatted);
-
-    }
-
-    catch (err) {
-
-      console.error(err);
-
-      setPlaces([]);
-
-      setError(
-        "Unable to connect to DesiTrails AI backend. Make sure FastAPI is running."
+      setPlaces(
+        recommendations.map((place) => ({
+          ...place,
+          image: place.image || fallbackImage,
+          score: place.match_score,
+          description:
+            place.description ||
+            "A beautiful lesser-known destination waiting to be explored.",
+        }))
       );
-    }
-
-    finally {
-
+    } catch (err) {
+      console.error(err);
+      setPlaces([]);
+      setError(
+        "Unable to connect to DesiTrails AI backend. Please check the backend deployment."
+      );
+    } finally {
       setLoading(false);
     }
   };
 
-
-  // ==========================================================
-  // ENTER KEY
-  // ==========================================================
-
   const handleKeyDown = (event) => {
-
     if (event.key === "Enter") {
-
       searchPlaces();
     }
   };
 
-
-  // ==========================================================
-  // SUGGESTION
-  // ==========================================================
-
   const useSuggestion = (value) => {
-
     setPrompt(value);
-
     setError("");
   };
 
-
-  // ==========================================================
-  // MAP
-  // ==========================================================
-
   const openMap = (place) => {
-
     if (
-      place.latitude &&
-      place.longitude
+      place.latitude !== undefined &&
+      place.latitude !== null &&
+      place.longitude !== undefined &&
+      place.longitude !== null
     ) {
-
       const url =
-        `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`;
+        `https://www.google.com/maps/search/?api=1&query=` +
+        `${place.latitude},${place.longitude}`;
 
-      window.open(
-        url,
-        "_blank"
-      );
-
+      window.open(url, "_blank", "noopener,noreferrer");
       return;
     }
 
-
-    const query =
-      encodeURIComponent(
-        `${place.name}, ${place.state}, India`
-      );
-
+    const query = encodeURIComponent(
+      `${place.name}, ${place.state}, India`
+    );
 
     window.open(
       `https://www.google.com/maps/search/?api=1&query=${query}`,
-      "_blank"
+      "_blank",
+      "noopener,noreferrer"
     );
   };
 
-
-  // ==========================================================
-  // RENDER
-  // ==========================================================
-
   return (
-
     <div className="app">
-
-
-      {/* ====================================================
-          NAVBAR
-      ==================================================== */}
-
       <header className="navbar">
-
         <div className="nav-container">
-
           <div className="logo">
-
-            DesiTrails
-            <span>AI</span>
-
+            DesiTrails <span>AI</span>
           </div>
 
-
           <nav>
-
-            <a
-              href="#home"
-              className="active"
-            >
+            <a href="#home" className="active">
               Home
             </a>
-
-            <a href="#explore">
-              Explore
-            </a>
-
-            <a href="#about">
-              About
-            </a>
-
+            <a href="#explore">Explore</a>
+            <a href="#about">About</a>
           </nav>
-
         </div>
-
       </header>
 
-
-      {/* ====================================================
-          HERO
-      ==================================================== */}
-
       <main>
-
-        <section
-          className="hero"
-          id="home"
-        >
-
+        <section className="hero" id="home">
           <div className="hero-container">
-
-
-            {/* LEFT */}
-
             <div className="hero-content">
-
               <h1>
-
                 Find less popular places
-
                 <br />
-
                 in India using AI.
-
               </h1>
 
-
               <p className="hero-description">
-
-                DesiTrails AI helps you discover hidden gems
-
-                <br />
-
-                off the beaten path.
-
+                DesiTrails AI understands your travel preferences and
+                recommends destinations from its curated dataset.
               </p>
 
-
-              {/* SEARCH */}
-
               <div className="search-row">
-
                 <div className="search-box">
-
-                  <span className="location-icon">
-                    📍
-                  </span>
-
+                  <span className="location-icon">📍</span>
 
                   <input
                     type="text"
-                    placeholder="Where do you want to go?"
+                    placeholder="e.g. cheap and peaceful place in Jammu and Kashmir"
                     value={prompt}
-                    onChange={(event) =>
-                      setPrompt(
-                        event.target.value
-                      )
-                    }
-                    onKeyDown={
-                      handleKeyDown
-                    }
+                    onChange={(event) => setPrompt(event.target.value)}
+                    onKeyDown={handleKeyDown}
                   />
-
                 </div>
-
 
                 <button
                   className="search-button"
-                  onClick={
-                    searchPlaces
-                  }
+                  onClick={searchPlaces}
                   disabled={loading}
                 >
-
-                  {loading
-                    ? "Searching..."
-                    : "Search"}
-
+                  {loading ? "Searching..." : "Search"}
                 </button>
-
               </div>
-
-
-              {/* SUGGESTIONS */}
 
               <div className="try-text">
-
-                Try:
-
+                Try:{" "}
                 <button
                   onClick={() =>
                     useSuggestion(
-                      "Ziro Valley"
+                      "I want a cheap and peaceful place in West Bengal"
                     )
                   }
                 >
-                  Ziro Valley
+                  Cheap + peaceful in West Bengal
                 </button>
-
-                ,
-
+                ,{" "}
                 <button
                   onClick={() =>
                     useSuggestion(
-                      "Bhandardara"
+                      "I want a nature-filled adventurous place in Jammu and Kashmir"
                     )
                   }
                 >
-                  Bhandardara
+                  Nature + adventure in J&K
                 </button>
-
-                ,
-
+                ,{" "}
                 <button
                   onClick={() =>
                     useSuggestion(
-                      "Tirthan Valley"
+                      "I want a cool and peaceful place in Manipur"
                     )
                   }
                 >
-                  Tirthan Valley
+                  Cool + peaceful in Manipur
                 </button>
-
               </div>
-
             </div>
-
-
-            {/* RIGHT ILLUSTRATION */}
 
             <div className="hero-image">
-
               <div className="landscape">
-
                 <div className="cloud cloud-one"></div>
-
                 <div className="cloud cloud-two"></div>
-
                 <div className="mountain mountain-one"></div>
-
                 <div className="mountain mountain-two"></div>
-
                 <div className="mountain mountain-three"></div>
-
                 <div className="tree tree-one">▲</div>
-
                 <div className="tree tree-two">▲</div>
-
                 <div className="tree tree-three">▲</div>
-
                 <div className="ground"></div>
-
                 <div className="path"></div>
-
               </div>
-
             </div>
-
           </div>
-
         </section>
 
+        {error && <div className="error-message">{error}</div>}
 
-        {/* ==================================================
-            ERROR
-        ================================================== */}
-
-        {error && (
-
-          <div className="error-message">
-
-            {error}
-
-          </div>
-
-        )}
-
-
-        {/* ==================================================
-            RECOMMENDATIONS
-        ================================================== */}
-
-        <section
-          className="recommendations"
-          id="explore"
-        >
-
+        <section className="recommendations" id="explore">
           <div className="recommendation-container">
-
-
             <h2>
-
               {searched
                 ? "Places you might like"
                 : "Less known places you might like"}
-
             </h2>
-
 
             {loading ? (
-
               <div className="loading">
-
-                Finding the best places
-                for you...
-
+                Finding the best places for you...
               </div>
-
             ) : places.length === 0 ? (
-
               <div className="no-results">
-
                 No matching destinations found.
-
               </div>
-
             ) : (
-
               <div className="cards">
+                {places.map((place, index) => (
+                  <div
+                    className="place-card"
+                    key={`${place.name}-${index}`}
+                  >
+                    <div className="card-image-wrapper">
+                      <img
+                        src={place.image || fallbackImage}
+                        alt={place.name}
+                        onError={(event) => {
+                          event.currentTarget.src = fallbackImage;
+                        }}
+                      />
 
-                {places.map(
-                  (place, index) => (
-
-                    <div
-                      className="place-card"
-                      key={
-                        `${place.name}-${index}`
-                      }
-                    >
-
-
-                      {/* IMAGE */}
-
-                      <div className="card-image-wrapper">
-
-                        <img
-                          src={
-                            place.image ||
-                            fallbackImage
-                          }
-                          alt={
-                            place.name
-                          }
-                          onError={(
-                            event
-                          ) => {
-
-                            event.currentTarget.src =
-                              fallbackImage;
-
-                          }}
-                        />
-
-
-                        {/* MATCH SCORE */}
-
-                        {place.score !==
-                          undefined &&
-                          place.score !==
-                          null && (
-
-                            <div className="score">
-
-                              {Math.round(
-                                place.score
-                              )}
-                              % match
-
-                            </div>
-
-                          )}
-
-                      </div>
-
-
-                      {/* CONTENT */}
-
-                      <div className="card-content">
-
-                        <h3>
-
-                          {place.name}
-
-                        </h3>
-
-
-                        <div className="state">
-
-                          <span className="pin">
-                            📍
-                          </span>
-
-                          {place.state}
-
-                        </div>
-
-
-                        <p>
-
-                          {
-                            place.description
-                          }
-
-                        </p>
-
-
-                        {/* MAP BUTTON */}
-
-                        <button
-                          className="map-button"
-                          onClick={() =>
-                            openMap(
-                              place
-                            )
-                          }
-                        >
-
-                          View on Map →
-
-                        </button>
-
-                      </div>
-
+                      {place.score !== undefined &&
+                        place.score !== null && (
+                          <div className="score">
+                            {Math.round(Number(place.score))}% match
+                          </div>
+                        )}
                     </div>
 
-                  )
-                )}
+                    <div className="card-content">
+                      <h3>{place.name}</h3>
 
+                      <div className="state">
+                        <span className="pin">📍</span>
+                        {place.state}
+                      </div>
+
+                      <p>{place.description}</p>
+
+                      <div className="card-details">
+                        {place.budget !== undefined && (
+                          <span>Budget: ₹{place.budget}</span>
+                        )}
+                        {place.best_season && (
+                          <span>Best: {place.best_season}</span>
+                        )}
+                        {place.tourism_saturation && (
+                          <span>Tourism: {place.tourism_saturation}</span>
+                        )}
+                      </div>
+
+                      <button
+                        className="map-button"
+                        onClick={() => openMap(place)}
+                      >
+                        View on Map →
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-
             )}
 
-
-            {/* EXPLORE MORE */}
-
-            <a
-              className="explore-more"
-              href="#explore"
-            >
-
-              Explore more places
-
-              <span>→</span>
-
+            <a className="explore-more" href="#explore">
+              Explore more places <span>→</span>
             </a>
-
           </div>
-
         </section>
 
-
-        {/* ==================================================
-            ABOUT
-        ================================================== */}
-
-        <section
-          className="about"
-          id="about"
-        >
-
+        <section className="about" id="about">
           <div className="about-container">
-
-            <h2>
-              Discover India beyond the usual
-            </h2>
-
+            <h2>Discover India beyond the usual</h2>
             <p>
-
-              DesiTrails AI understands your
-              travel preferences and recommends
-              lesser-known destinations based on
-              budget, nature, adventure, culture,
-              crowd levels and accessibility.
-
+              DesiTrails AI understands travel preferences and ranks
+              destinations from the dataset using only the preferences
+              detected in the user's prompt.
             </p>
-
           </div>
-
         </section>
-
       </main>
 
-
-      {/* ====================================================
-          FOOTER
-      ==================================================== */}
-
       <footer>
-
         <div className="footer-container">
-
-          <div>
-
-            © 2026 DesiTrails AI
-
-          </div>
-
+          <div>© 2026 DesiTrails AI</div>
 
           <div className="footer-links">
-
-            <a href="#about">
-              About
-            </a>
-
-            <a href="#privacy">
-              Privacy
-            </a>
-
+            <a href="#about">About</a>
+            <a href="#privacy">Privacy</a>
           </div>
-
         </div>
-
       </footer>
-
     </div>
   );
 }
-
 
 export default App;
